@@ -1,4 +1,3 @@
-package com.example.todo.model;
 package com.fantom.todo.model;
 public class Todo {
     private int id;

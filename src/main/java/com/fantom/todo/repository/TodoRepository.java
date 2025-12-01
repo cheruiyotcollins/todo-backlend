@@ -1,13 +1,10 @@
-package com.example.todo.repository;
+package com.fantom.todo.repository;
 
-import com.example.todo.model.Todo;
+import com.fantom.todo.model.Todo;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository interface for Todo items.
- * Defines the contract for data access operations, mimicking Spring Data conventions.
- */
+
 public interface TodoRepository {
 
     /**

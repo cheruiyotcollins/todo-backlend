@@ -1,6 +1,6 @@
-package com.example.todo.controller;
+package com.fantom.todo.controller;
 
-import com.example.todo.model.Todo;
+import com.fantom.todo.model.Todo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * REST Controller implementing the required API endpoints.
- * All data is stored in-memory.
- */
 @RestController
 @RequestMapping("/api/todos")
 // Required to allow the frontend (running on a different port/protocol) to communicate with the backend.
