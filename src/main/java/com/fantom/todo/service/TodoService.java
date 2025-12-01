@@ -1,55 +1,48 @@
 package com.fantom.todo.service;
 
-import com.example.todo.model.Todo;
+import com.fantom.todo.model.Todo;
+import com.fantom.todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class TodoService {
 
-    // --- In-memory Storage ---
-    private final List<Todo> todos = new ArrayList<>();
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final TodoRepository todoRepository;
 
-    public TodoService() {
-        // Initialize with test data
-        todos.add(new Todo("Write Java Spring Boot code"));
-        todos.get(0).setId(nextId.getAndIncrement());
-        todos.get(0).setCompleted(true);
-
-        todos.add(new Todo("Learn more about REST APIs"));
-        todos.get(1).setId(nextId.getAndIncrement());
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
+
+    // GET all todos
     public List<Todo> findAll() {
-        return todos;
+        return todoRepository.findAll();
     }
 
+    // CREATE todo
     public Todo create(Todo todoRequest) {
         if (todoRequest.getTitle() == null || todoRequest.getTitle().trim().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be empty.");
         }
 
-        todoRequest.setId(nextId.getAndIncrement());
-        todoRequest.setCompleted(false);
+        todoRequest.setId(null);       // let DB generate
+        todoRequest.setCompleted(false); // default value
 
-        todos.add(todoRequest);
-        return todoRequest;
+        return todoRepository.save(todoRequest);
     }
-    public Optional<Todo> updateStatus(int id, boolean completed) {
-        Optional<Todo> todoOptional = todos.stream()
-                .filter(t -> t.getId() == id)
-                .findFirst();
 
-        if (todoOptional.isPresent()) {
-            Todo todo = todoOptional.get();
+    // UPDATE status (toggle)
+    public Optional<Todo> updateStatus(Long id, boolean completed) {
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+
+        if (optionalTodo.isPresent()) {
+            Todo todo = optionalTodo.get();
             todo.setCompleted(completed);
-            return Optional.of(todo);
+            todoRepository.save(todo);
         }
 
-        return Optional.empty();
+        return optionalTodo;
     }
 }
